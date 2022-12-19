@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 from random import uniform
@@ -12,7 +11,7 @@ class Automata(webdriver.Chrome):
         self.driver_path = driver_path
         self.usr = '' #specify the username
         self.pw = '' #specify the password
-        self.randType = uniform(0.55, 0.61)
+        self.randType = uniform(0.53, 0.58) #specify the typing speed (currently a random interval to wait between words, ca 106 WPM avg)
         options = webdriver.ChromeOptions()
         options.add_experimental_option("excludeSwitches", ["enable-logging"])
         super(Automata, self).__init__(options=options)
@@ -47,27 +46,20 @@ class Automata(webdriver.Chrome):
         sleep(2)
 
     def type_race(self):
+  
+        sleep(2)
 
-        for _ in range(10):
-            sleep(2)
-            print("starting")
-
-            text_ = self.find_element(By.CLASS_NAME, "txtInput")
-            state = self.find_element(By.CLASS_NAME, "gameStatusLabel")
-            text_full = self.find_element(By.CLASS_NAME, "inputPanel").text
-            wordlist = text_full.split()
-            wordlist = wordlist[:-3]
-
-            while True:
-                if "The race is on!" in state.text or "Go!" in state.text:
-                    for word in wordlist:
-                        print(word, wordlist)
-                        text_.send_keys(word + " ")
-                        sleep(self.randType)
-
-                    print("continuing")
-                    race_again = self.find_element(By.XPATH, "//a[contains(., 'Race again')]")
-                    race_again.click()
-                    return False
+        text_ = self.find_element(By.CLASS_NAME, "txtInput")
+        state = self.find_element(By.CLASS_NAME, "gameStatusLabel")
+        text_full = self.find_element(By.CLASS_NAME, "inputPanel").text
+        wordlist = text_full.split()
+        wordlist = wordlist[:-3]
+  
+        while True:
+            if "The race is on!" in state.text or "Go!" in state.text:
+                for word in wordlist:
+                    text_.send_keys(word + " ")
+                    sleep(self.randType)
+                break
 
 
